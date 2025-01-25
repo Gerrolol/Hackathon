@@ -1,8 +1,8 @@
 export interface QuizData {
-  question: string;
-  options: string[];
-  correctOption: number;
-  answered: number | null;
+  question : string;
+  options : string[];
+  correctOption : number;
+  answered : number | null;
 }
 
 export interface QuizcardInterface {
@@ -53,5 +53,6 @@ const Quizcard: React.FC<QuizcardInterface> = ({ handleAnswer, questionNumber, d
     </div>
   );
 };
+
 
 export default Quizcard;
