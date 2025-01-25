@@ -34,13 +34,13 @@ const Pagination: React.FC<PaginationProps> = ({
       </div>
 
       <div className="center-align">
-        <button onClick={handlePrevious} disabled={currentPage === 1}>
+        <button onClick={handlePrevious} disabled={currentPage == 1}>
           Previous
         </button>
         <span>
           Page {currentPage} of {totalPages}
         </span>
-        <button onClick={handleNext} disabled={currentPage === totalPages}>
+        <button onClick={handleNext} disabled={currentPage == totalPages}>
           Next
         </button>
       </div>
