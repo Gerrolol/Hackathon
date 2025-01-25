@@ -5,38 +5,13 @@ import Pagination from './components/pagination';
 import RestartModal from './components/restartModal';
 import QuizForm from './components/quizform';
 
+
 function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(1);
   const [showRestartModal, setShowRestartModal] = useState<boolean>(false);
   const [pagedQuestions, setPagedQuestions] = useState<QuizData[]>([]);
-  const [questions, setQuestions] = useState<QuizData[]>([
-    {
-      question: "What is the capital of France?",
-      options: ["Paris", "Berlin", "Madrid", "Rome"],
-      correctOption: 0,
-    },
-    {
-      question: "Which planet is known as the Red Planet?",
-      options: ["Earth", "Mars", "Jupiter", "Venus"],
-      correctOption: 1,
-    },
-    {
-      question: "Who wrote 'To Kill a Mockingbird'?",
-      options: ["Harper Lee", "J.K. Rowling", "Ernest Hemingway", "George Orwell"],
-      correctOption: 0,
-    },
-    {
-      question: "What is the largest ocean on Earth?",
-      options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
-      correctOption: 3,
-    },
-    {
-      question: "What is the tallest mountain in the world?",
-      options: ["K2", "Mount Everest", "Kangchenjunga", "Makalu"],
-      correctOption: 1,
-    },
-  ]);
+  const [questions, setQuestions] = useState<QuizData[]>([]);
   const [showForm, setShowForm] = useState(true);
 
   useEffect(() => {
@@ -67,7 +42,13 @@ function App() {
   };
 
   const handleRestart = () => {
-    // Add your restart logic here
+    setQuestions((questions) =>
+      questions.map((question) => ({
+        ...question,
+        answered: null,
+      }))
+    );
+    setCurrentPage(1);
   };
 
   const handleQuizFormSubmit = (submittedQuestions: { question: string; options: string[]; correctOption: number }[]) => {
@@ -75,13 +56,22 @@ function App() {
       question: q.question,
       options: q.options,
       correctOption: q.correctOption,
+      answered: null, // Add the answered property
     }));
-    setQuestions(newQuestions);
+    setQuestions([...questions, ...newQuestions]);
     setShowForm(false); // Hide the form after submission
   };
 
   const handleAddQuestionClick = () => {
     setShowForm(true); // Show the form when "Add Question" button is clicked
+  };
+
+  const handleAnswer = (questionNumber: number, index: number) => {
+    setQuestions((questions) =>
+      questions.map((question, i) =>
+        i === (questionNumber - 1) ? { ...question, answered: index } : question
+      )
+    );
   };
 
   return (
@@ -91,7 +81,14 @@ function App() {
       {!showForm && <button onClick={handleAddQuestionClick}>Add Question</button>}
       {pagedQuestions.map((question, i) => {
         const adjustedIndex = (currentPage - 1) * pageSize + i;
-        return <Quizcard key={adjustedIndex} questionNumber={adjustedIndex + 1} data={question} />;
+        return (
+          <Quizcard 
+            key={adjustedIndex} 
+            questionNumber={adjustedIndex + 1} 
+            data={question} 
+            handleAnswer={handleAnswer}
+          />
+        );
       })}
       <Pagination
         pageSize={pageSize}
