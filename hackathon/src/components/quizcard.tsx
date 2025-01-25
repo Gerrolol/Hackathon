@@ -1,28 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 
 export interface QuizData {
   question : string;
   options : string[];
   correctOption : number;
+  answered : number | null;
 }
 export interface QuizcardInterface{
   questionNumber : number;
   data : QuizData;
+  handleAnswer : (questionsNumber: number, index: number)=> void;
 }
-
-const Quizcard:React.FC<QuizcardInterface>  = ({ questionNumber, data: {question, options, correctOption} } : QuizcardInterface)=> {
-  const [selectedOptionNo, setSelectedOptionNo] = useState<number | null>(null);
-  const [isAnswered, setIsAnswered] = useState(false);
-
-  const handleOptionClick = (option : string) => {
-    setSelectedOptionNo(options.indexOf(option));
-    setIsAnswered(true);
+const Quizcard: React.FC<QuizcardInterface> = ({ handleAnswer, questionNumber, data: { question, options, correctOption, answered } }: QuizcardInterface) => {
+  const handleOptionClick = (index: number, questionNumber: number) => {
+    handleAnswer(questionNumber, index);
   };
 
-  const getOptionClass = (option : string) => {
-    if (!isAnswered) return '';
+  const getOptionClass = (option: string) => {
+    if (answered == null) return '';
     if (options.indexOf(option) === correctOption) return 'correct';
-    if (options.indexOf(option) === selectedOptionNo) return 'incorrect';
+    if (options.indexOf(option) === answered) return 'incorrect';
     return '';
   };
 
@@ -35,20 +32,20 @@ const Quizcard:React.FC<QuizcardInterface>  = ({ questionNumber, data: {question
           <button
             key={index}
             className={`option ${getOptionClass(option)}`}
-            onClick={() => handleOptionClick(option)}
-            disabled={isAnswered} // Disable options after answering
+            onClick={() => handleOptionClick(options.indexOf(option), questionNumber)}
+            disabled={answered != null}
           >
             {option}
           </button>
         ))}
       </div>
-      {isAnswered && (
+      {answered != null && (
         <div className="feedback">
-          {selectedOptionNo === correctOption ? (
+          {answered === correctOption ? (
             <p className="correct-answer">Correct!</p>
           ) : (
             <p className="incorrect-answer">
-              Incorrect! The correct answer is: {correctOption}
+              Incorrect! The correct answer is: {options[correctOption]}
             </p>
           )}
         </div>
@@ -56,5 +53,6 @@ const Quizcard:React.FC<QuizcardInterface>  = ({ questionNumber, data: {question
     </div>
   );
 };
+
 
 export default Quizcard;
