@@ -1,5 +1,4 @@
 import React from 'react';
-import { QuizData } from './quizcard';
 
 interface PaginationProps {
   pageSize : number;
