@@ -46,7 +46,6 @@ function App() {
 
   useEffect (() => {
     refreshPagedQuestions();
-    console.log(questions);
   },[currentPage, pageSize, questions])
 
   const handlePageChange = (newPage : number) => {
@@ -80,6 +79,7 @@ function App() {
         answered: null,
       }))
     );
+    setCurrentPage(1);
   };
 
   const handleAnswer = (questionNumber: number, index: number) => {
@@ -88,7 +88,6 @@ function App() {
         i === (questionNumber -1) ? { ...question, answered: index } : question
       )
     );
-    console.log(questionNumber, index);
   };
 
   return (

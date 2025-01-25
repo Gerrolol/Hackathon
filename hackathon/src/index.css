@@ -155,6 +155,10 @@ button:focus-visible {
   color: white;
 }
 
+.pagination button :disabled{
+  background-color: #454545;
+}
+
 .pagination .restart-button {
   background-color: red;
   color: white;
